@@ -1,33 +1,37 @@
 #include "stdafx.h"
 #include "Queen.h"
-const int SIZE = 12;
-int board[SIZE][SIZE];//матрица ячеек
 
-void setQueen(int i, int j)//ставим ферзя и заполняем ячейки, которые ферзь будет бить
+const int SIZE = 4;
+int board[SIZE][SIZE];//Г¬Г ГІГ°ГЁГ¶Г  ГїГ·ГҐГҐГЄ
+int resultsCount = 0;
+int quantity = 0;
+
+
+void setQueen(int i, int j)//Г±ГІГ ГўГЁГ¬ ГґГҐГ°Г§Гї ГЁ Г§Г ГЇГ®Г«Г­ГїГҐГ¬ ГїГ·ГҐГ©ГЄГЁ, ГЄГ®ГІГ®Г°Г»ГҐ ГґГҐГ°Г§Гј ГЎГіГ¤ГҐГІ ГЎГЁГІГј
 {
 	for (int x = 0; x < SIZE; ++x)
 	{
-		++board[x][j];//прибавляем по горизонтали
-		++board[i][x];//прибавляем по вертикали
+		++board[x][j];//ГЇГ°ГЁГЎГ ГўГ«ГїГҐГ¬ ГЇГ® ГЈГ®Г°ГЁГ§Г®Г­ГІГ Г«ГЁ
+		++board[i][x];//ГЇГ°ГЁГЎГ ГўГ«ГїГҐГ¬ ГЇГ® ГўГҐГ°ГІГЁГЄГ Г«ГЁ
 		int foo;
 		foo = j - i + x;
-		if (foo >= 0 && foo < SIZE)//прибавляем по диагонали
+		if (foo >= 0 && foo < SIZE)//ГЇГ°ГЁГЎГ ГўГ«ГїГҐГ¬ ГЇГ® Г¤ГЁГ ГЈГ®Г­Г Г«ГЁ
 			++board[x][foo];
 		foo = j + i - x;
 		if (foo >= 0 && foo < SIZE)
 			++board[x][foo];
 	}
-	board[i][j] = -1;//-1 означает, что там стоит ферзь
+	board[i][j] = -1;//-1 Г®Г§Г­Г Г·Г ГҐГІ, Г·ГІГ® ГІГ Г¬ Г±ГІГ®ГЁГІ ГґГҐГ°Г§Гј
 }
 
-void resetQueen(int i, int j)//удаляем ферзя
+void resetQueen(int i, int j)//ГіГ¤Г Г«ГїГҐГ¬ ГґГҐГ°Г§Гї
 {
 	for (int x = 0; x < SIZE; ++x)
 	{
-		--board[x][j];//отнимаем по горизонтали
-		--board[i][x];//отнимаем по вертикали
+		--board[x][j];//Г®ГІГ­ГЁГ¬Г ГҐГ¬ ГЇГ® ГЈГ®Г°ГЁГ§Г®Г­ГІГ Г«ГЁ
+		--board[i][x];//Г®ГІГ­ГЁГ¬Г ГҐГ¬ ГЇГ® ГўГҐГ°ГІГЁГЄГ Г«ГЁ
 		int foo;
-		foo = j - i + x;//по горизонтали
+		foo = j - i + x;//ГЇГ® ГЈГ®Г°ГЁГ§Г®Г­ГІГ Г«ГЁ
 		if (foo >= 0 && foo < SIZE)
 			--board[x][foo];
 		foo = j + i - x;
@@ -37,27 +41,41 @@ void resetQueen(int i, int j)//удаляем ферзя
 	board[i][j] = 0;
 }
 
-bool tryQueen(int i)//пытается поставить ферзя на i-ый столбец, если это удасться , то возвращает true 
+
+void resultQueen()
 {
-	bool result = false;
+
+	cout << "Result #" << ++resultsCount << endl;
+	printQueen();
+
+
+}
+
+void tryQueen(int i)//ГЇГ»ГІГ ГҐГІГ±Гї ГЇГ®Г±ГІГ ГўГЁГІГј ГґГҐГ°Г§Гї Г­Г  i-Г»Г© Г±ГІГ®Г«ГЎГҐГ¶, ГҐГ±Г«ГЁ ГЅГІГ® ГіГ¤Г Г±ГІГјГ±Гї , ГІГ® ГўГ®Г§ГўГ°Г Г№Г ГҐГІ true 
+{
 	int j = 0;
+
+	if (quantity == SIZE)//Г§Г­Г Г·ГЁГІ ГўГ±ГҐГµ ГґГҐГ°Г§ГҐГ© ГЇГ®Г±ГІГ ГўГЁГ«ГЁ
+	{
+		resultQueen();
+		return;
+	}
+
 	for (j = 0; j < SIZE; ++j)
 	{
-		if (board[i][j] == 0)//никто не бьет эту ячейку
+		if (board[i][j] == 0)//Г­ГЁГЄГІГ® Г­ГҐ ГЎГјГҐГІ ГЅГІГі ГїГ·ГҐГ©ГЄГі
 		{
 			setQueen(i, j);
-			if (i == SIZE - 1)//значит всех ферзей поставили
-				result = true;
-			else
-			{
-				if (!(result = tryQueen(i + 1)))//если не удалось поставить ферзя на следующий столбец
-					resetQueen(i, j);
-			}
+
+			quantity++;
+			tryQueen(i + 1);//ГҐГ±Г«ГЁ Г­ГҐ ГіГ¤Г Г«Г®Г±Гј ГЇГ®Г±ГІГ ГўГЁГІГј ГґГҐГ°Г§Гї Г­Г  Г±Г«ГҐГ¤ГіГѕГ№ГЁГ© Г±ГІГ®Г«ГЎГҐГ¶
+			resetQueen(i, j);
+			quantity--;
 		}
-		if (result)// удалось поставить ферзя
-			break;
+		/*if (result)// ГіГ¤Г Г«Г®Г±Гј ГЇГ®Г±ГІГ ГўГЁГІГј ГґГҐГ°Г§Гї
+		break;*/
 	}
-	return result;
+
 }
 
 void printQueen()
@@ -67,14 +85,14 @@ void printQueen()
 		for (int j = 0; j < SIZE; ++j)
 		{
 			if (board[i][j] == -1)
-				cout << " ! ";//ферзь
+				cout << " ! ";//ГґГҐГ°Г§Гј
 			else
-				cout << " . "; //отсутствие ферзя
+				cout << " . "; //Г®ГІГ±ГіГІГ±ГІГўГЁГҐ ГґГҐГ°Г§Гї
 		}
 		cout << endl;
 	}
 }
- 
+
 void cleanQueen()
 {
 	for (int i = 0; i < SIZE; ++i)
