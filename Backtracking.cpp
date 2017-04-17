@@ -12,9 +12,8 @@ int main()
 	cout << " Нужно расставить ферзей на доске так, чтобы они не били друг друга. " << endl;
 	cleanQueen();
 	tryQueen(0);
-	printQueen();
 	system("pause");
-	return 0;
+	return 1;
 }
 
 

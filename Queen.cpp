@@ -1,7 +1,9 @@
 #include "stdafx.h"
 #include "Queen.h"
-const int SIZE = 12;
+const int SIZE = 4;
 int board[SIZE][SIZE];//матрица €чеек
+int resultsCount = 0;
+int quantity = 0;
 
 void setQueen(int i, int j)//ставим ферз€ и заполн€ем €чейки, которые ферзь будет бить
 {
@@ -37,27 +39,38 @@ void resetQueen(int i, int j)//удал€ем ферз€
 	board[i][j] = 0;
 }
 
-bool tryQueen(int i)//пытаетс€ поставить ферз€ на i-ый столбец, если это удастьс€ , то возвращает true 
+void resultQueen()
 {
-	bool result = false;
+
+	cout << "Result #" << ++resultsCount << endl;
+	printQueen();
+
+
+}
+
+void tryQueen(int i)//пытаетс€ поставить ферз€ на i-ый столбец, если это удастьс€ , то возвращает true 
+{
 	int j = 0;
+
+	if (quantity == SIZE)//значит всех ферзей поставили
+	{
+		resultQueen();
+		return;
+	}
+
 	for (j = 0; j < SIZE; ++j)
 	{
 		if (board[i][j] == 0)//никто не бьет эту €чейку
 		{
 			setQueen(i, j);
-			if (i == SIZE - 1)//значит всех ферзей поставили
-				result = true;
-			else
-			{
-				if (!(result = tryQueen(i + 1)))//если не удалось поставить ферз€ на следующий столбец
-					resetQueen(i, j);
-			}
+			quantity++;
+			tryQueen(i + 1);//если не удалось поставить ферз€ на следующий столбец
+			resetQueen(i, j);
+			quantity--;
 		}
-		if (result)// удалось поставить ферз€
-			break;
+		/*if (result)// удалось поставить ферз€
+		break;*/
 	}
-	return result;
 }
 
 void printQueen()
@@ -74,7 +87,7 @@ void printQueen()
 		cout << endl;
 	}
 }
- 
+
 void cleanQueen()
 {
 	for (int i = 0; i < SIZE; ++i)

@@ -5,6 +5,6 @@ using namespace std;
 
 void setQueen(int i, int j);
 void resetQueen(int i, int j);
-bool tryQueen(int i);
+void tryQueen(int i);
 void printQueen();
 void cleanQueen();
